@@ -44,6 +44,16 @@ app.get("/login", (req, res) => {
 });
 app.post("/login", (req, res) => {
     console.log(req.body.id, req.body.password);
+    const idx = memberList.findIndex(member=>member.id===req.body.id);
+    if(idx != -1) {
+        if(memberList[idx].password === req.body.password) {
+            console.log("로그인 성공!");
+            // 세션에 로그인 정보를 등록 후 멤버 페이지 이동
+        } else {
+            console.log("로그인 실패!");
+            // 다시 로그인 페이지로 이동
+        }
+    }
     res.redirect("/member");
 });
 
