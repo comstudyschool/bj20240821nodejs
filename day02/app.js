@@ -12,7 +12,7 @@ app.get("/home", (req, res) => {
     req.app.render("Home", {}, (err, html)=>{
         res.end(html);
     })
-})
+});
 
 const server = http.createServer(app);
 server.listen(app.get('port'), ()=>{
