@@ -1,12 +1,24 @@
 const http = require("http");
 const express = require("express");
 const app = express();
+const bodyParser = require('body-parser');
 
 app.set('port', 3000);
 app.set("views", "views");
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+// POST 방식으로 파라미터 전달 받기 위한 설정
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+const memberList = [
+    {no:101, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
+    {no:102, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
+    {no:103, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
+    {no:104, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"}
+];
+let noCnt = 105;
 
 app.get("/home", (req, res) => {
     req.app.render("home/Home", {}, (err, html)=>{
@@ -31,6 +43,7 @@ app.get("/login", (req, res) => {
     });
 });
 app.post("/login", (req, res) => {
+    console.log(req.body.id, req.body.password);
     res.redirect("/member");
 });
 
