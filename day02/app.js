@@ -14,7 +14,6 @@ app.get("/home", (req, res) => {
     })
 })
 
-
 const server = http.createServer(app);
 server.listen(app.get('port'), ()=>{
     console.log(`Run on server >>> http://localhost:${app.get('port')}`);
