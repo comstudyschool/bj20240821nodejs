@@ -22,6 +22,7 @@ app.use(expressSession({
     saveUninitialized: true
 }));
 
+// 임시 데이터 
 const memberList = [
     {no:101, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
     {no:102, id:"user02", password:"12345", name:"김길동", email:"kim@gmail.com"},
@@ -29,6 +30,17 @@ const memberList = [
     {no:104, id:"user04", password:"123456", name:"이길동", email:"park@gmail.com"}
 ];
 let noCnt = 105;
+
+// 쇼핑몰 상품 목록
+const carList = [
+    {_id:111, name:'SM5', price:3000, year:1999, company:'SAMSUNG'},
+	{_id:112, name:'SM7', price:5000, year:2013, company:'SAMSUNG'},
+    {_id:113, name:'SONATA', price:3000, year:2023, company:'HYUNDAI'},
+    {_id:114, name:'GRANDEUR', price:4000, year:2022, company:'HYUNDAI'},
+    {_id:115, name:'BMW', price:6000, year:2019, company:'BMW'},
+    {_id:116, name:'SONATA', price:3200, year:2024, company:'HYUNDAI'}
+];
+let carSeq=117;
 
 // 요청 라운팅 사용
 const router = express.Router();
@@ -122,7 +134,8 @@ router.route("/gallery").get((req,res)=> {
 });
 // ---- 쇼핑몰 기능
 router.route("/shop").get((req,res)=> {
-    req.app.render("shop/Shop", {}, (err, html)=>{
+    req.app.render("shop/Shop", {carList}, (err, html)=>{
+        if(err) throw err;
         res.end(html);
     });
 });
@@ -132,12 +145,39 @@ router.route("/shop/insert").get((req,res)=> {
     });
 });
 router.route("/shop/modify").get((req,res)=> {
-    req.app.render("shop/Modify", {}, (err, html)=>{
+    const _id = parseInt(req.query._id);
+    console.log(_id)
+    const idx = carList.findIndex(car=>_id===car._id);
+    console.log(idx);
+    if(idx === -1) {
+        console.log("상품이 존재 하지 않습니다.")
+        res.redirect("/shop");
+        return;
+    }
+    req.app.render("shop/Modify", {car:carList[idx]}, (err, html)=>{
+        if(err) throw err;
         res.end(html);
     });
 });
+router.route("/shop/modify").post((req,res)=> {
+    console.log("POST - /shop/modify 호출");
+    console.dir(req.body);
+    res.redirect('/shop');
+});
 router.route("/shop/detail").get((req,res)=> {
-    req.app.render("shop/Detail", {}, (err, html)=>{
+    // 쿼리로 전송된 데이터는 모두 문자열이다. 
+    // parseInt() 필수 "56" <-- numeric
+    const _id = parseInt(req.query._id);
+    console.log(_id)
+    const idx = carList.findIndex(car=>_id===car._id);
+    console.log(idx);
+    if(idx === -1) {
+        console.log("상품이 존재 하지 않습니다.")
+        res.redirect("/shop");
+        return;
+    }
+    req.app.render("shop/Detail", {car:carList[idx]}, (err, html)=>{
+        if(err) throw err;
         res.end(html);
     });
 });
