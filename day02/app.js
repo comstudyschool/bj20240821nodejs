@@ -2,6 +2,7 @@ const http = require("http");
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 app.set('port', 3000);
 app.set("views", "views");
@@ -11,6 +12,8 @@ app.use(express.static("public"));
 // POST 방식으로 파라미터 전달 받기 위한 설정
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+// 쿠키 사용 미들웨어 설정
+app.use(cookieParser());
 
 const memberList = [
     {no:101, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
@@ -40,6 +43,12 @@ router.route("/member").get((req,res)=> {
 });
 router.route("/login").get((req,res)=> {
     req.app.render("member/Login", {}, (err, html)=>{
+        // 사용자(접속자)의 로컬에 쿠키가 저장 된다.
+        res.cookie('user', {
+            id:'TestUser',
+            name: '테스트 유저',
+            authorized: true
+        });
         res.end(html);
     });
 });
@@ -80,6 +89,22 @@ router.route("/shop").get((req,res)=> {
 
 // router 설정 맨 아래에 미들웨어 등록
 app.use('/', router);
+
+// 등록되지 않은 패스에 대해 페이지 오류 응답
+// app.all('*', function(req, res) {
+//     res.status(404).send('<h1>ERROR - 페이지를 찾을 수 없습니다.</h1>')
+// });
+
+const expressErrorHandler = require('express-error-handler');
+//모든 라우터 처리 후 404 오류 페이지 처리
+const errorHandler = expressErrorHandler({
+    static : {
+        '404':'./public/404.html'
+    }
+});
+app.use(expressErrorHandler.httpError(404) );
+app.use(errorHandler );
+
 // 서버 생성 및 실행
 const server = http.createServer(app);
 server.listen(app.get('port'), ()=>{
