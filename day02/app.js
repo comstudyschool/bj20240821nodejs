@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 
 const memberList = [
     {no:101, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
-    {no:102, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
-    {no:103, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
-    {no:104, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"}
+    {no:102, id:"user02", password:"12345", name:"김길동", email:"kim@gmail.com"},
+    {no:103, id:"user03", password:"123", name:"박길동", email:"lee@gmail.com"},
+    {no:104, id:"user04", password:"123456", name:"이길동", email:"park@gmail.com"}
 ];
 let noCnt = 105;
 
