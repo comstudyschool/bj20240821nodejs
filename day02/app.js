@@ -120,8 +120,34 @@ router.route("/gallery").get((req,res)=> {
         res.end(html);
     });
 });
+// ---- 쇼핑몰 기능
 router.route("/shop").get((req,res)=> {
     req.app.render("shop/Shop", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+router.route("/shop/insert").get((req,res)=> {
+    req.app.render("shop/Insert", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+router.route("/shop/modify").get((req,res)=> {
+    req.app.render("shop/Modify", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+router.route("/shop/detail").get((req,res)=> {
+    req.app.render("shop/Detail", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+router.route("/shop/delete").get((req,res)=> {
+    req.app.render("shop/Delete", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+router.route("/shop/cart").get((req,res)=> {
+    req.app.render("shop/Cart", {}, (err, html)=>{
         res.end(html);
     });
 });
