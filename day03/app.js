@@ -33,12 +33,18 @@ let noCnt = 105;
 
 // 쇼핑몰 상품 목록
 const carList = [
-    {_id:111, name:'SM5', price:3000, year:1999, company:'SAMSUNG'},
-	{_id:112, name:'SM7', price:5000, year:2013, company:'SAMSUNG'},
-    {_id:113, name:'SONATA', price:3000, year:2023, company:'HYUNDAI'},
-    {_id:114, name:'GRANDEUR', price:4000, year:2022, company:'HYUNDAI'},
-    {_id:115, name:'BMW', price:6000, year:2019, company:'BMW'},
-    {_id:116, name:'SONATA', price:3200, year:2024, company:'HYUNDAI'}
+    {
+        _id:111, 
+        name:'SM5', 
+        price:3000, 
+        year:1999, 
+        company:'SAMSUNG', 
+        originalname: "", 
+        filename: "",
+        filesize: 0,
+        mimetype: "",
+        writedate: ""
+    },
 ];
 let carSeq=117;
 
@@ -144,6 +150,10 @@ router.route("/shop/insert").get((req,res)=> {
         res.end(html);
     });
 });
+router.route("/shop/insert").post((req,res)=> {
+    // 파일 업르도 기능 추가
+    res.redirect("/shop");
+});
 router.route("/shop/modify").get((req,res)=> {
     const _id = parseInt(req.query._id);
     console.log(_id)
@@ -168,9 +178,9 @@ router.route("/shop/detail").get((req,res)=> {
     // 쿼리로 전송된 데이터는 모두 문자열이다. 
     // parseInt() 필수 "56" <-- numeric
     const _id = parseInt(req.query._id);
-    console.log(_id)
+    //console.log(_id)
     const idx = carList.findIndex(car=>_id===car._id);
-    console.log(idx);
+    //console.log(idx);
     if(idx === -1) {
         console.log("상품이 존재 하지 않습니다.")
         res.redirect("/shop");

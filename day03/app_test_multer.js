@@ -95,8 +95,7 @@ router.route('/process/photo').post(upload.array('photo', 1), (req, res) => {
     } catch (err) {
         console.dir(err.stack);
         res.end('File upload error!');
-    } // end of try~catch	
-    
+    } // end of try~catch
 });
 
 app.use('/', router);
