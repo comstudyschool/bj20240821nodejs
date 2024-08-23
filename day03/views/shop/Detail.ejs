@@ -31,6 +31,10 @@
                 <th>COMPANY</th>
                 <td><%=car.company %></td>
             </tr>
+            <tr>
+                <th>PHOTO</th>
+                <td><%=car.photos[0].originalname %><img src="../uploads/<%=car.photos[0].filename %>" /></td>
+            </tr>
         </table>
         <hr/>
         <a href="/shop/modify?_id=<%=car._id%>">수정</a> | 
