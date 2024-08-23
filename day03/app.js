@@ -15,9 +15,10 @@ var storage = multer.diskStorage({
         callback(null, 'uploads');
     },
     filename: function(req, file, callback) {
+        // 한글 파일명 깨짐 방지
+        const fileName = Buffer.from(file.originalname, 'latin1').toString('utf8');
         // 파일명 중복을 방지하기 위한 처리
         // Date.now() <-- 타임스템프
-        const fileName = Buffer.from(file.originalname, 'latin1').toString('utf8');
         let index = fileName .lastIndexOf(".");
         let newFileName = fileName .substring(0, index);
         newFileName += Date.now();
@@ -38,6 +39,7 @@ app.set('port', 3000);
 app.set("views", "views");
 app.set("view engine", "ejs");
 
+// 외부
 app.use(express.static("public"));
 app.use('/uploads', express.static("uploads"));
 // POST 방식으로 파라미터 전달 받기 위한 설정
@@ -191,6 +193,7 @@ router.route("/shop/insert").get((req,res)=> {
 });
 router.route("/shop/insert").post(upload.array('photo', 1),(req,res)=> {
     console.log("POST - /shop/insert");
+    // 구조분해 할당으로 body의 파라미터를 꺼낸다.
     const {name, price, year, company} = req.body;
     const newCar = {
         _id:carSeq++, name, price, year, company,
