@@ -1,36 +1,45 @@
-// node.js 프로젝트와 mongodb 연동 테스트
-// 결과를 웹 브라우저에서 출력
-const http = require('http');
-const express = require('express');
-const app = express();
-const mongojs = require("mongojs");
-const db = mongojs('vehicle', ['car']);
-const path = require("path");
+import { MongoClient } from "mongodb";
 
-app.set('port', 3000);
-app.set("view engine", "ejs"); // 접미사
-app.set("views", path.join(__dirname, "../views")); // 접두사: 절대 경로 + 상대 경로
+// Replace the uri string with your MongoDB deployment's connection string.
+const uri = "mongodb://localhost:27017";
 
-app.get('/', (req, res) => {
-    console.log("GET - / 요청 ...")
-    if(db) {
-        // mongojs는 옛날 기술 - 콜백 함수로 처리.
-        db.car.find((err, result) => {
-            if(err) throw err;
-            // 접두사와 접미사 생략 - 파일명만 사용
-            req.app.render("CarList", {carList: result}, (err2, html)=>{
-                if(err2) throw err2;
-                res.end(html);
-            });
-        });
-    } else {
-        res.end("db가 연결되지 않았습니다!");
+const client = new MongoClient(uri);
+const dbName = "vehicle";
+const collectionName = "car";
+
+async function run() {
+  try {
+    
+    // Get the database and collection on which to run the operation
+    const database = client.db(dbName);
+    const cars = database.collection(collectionName);
+
+    // Query for movies that have a runtime less than 15 minutes
+    const query = {};
+
+    const options = {
+      // Sort returned documents in ascending order by title (A->Z)
+      sort: { name: 1 },
+      // Include only the `title` and `imdb` fields in each returned document
+      projection: { _id: 0, title: 1, imdb: 1 },
+    };
+
+    // Execute query 
+    const cursor = cars.find(query, options);
+
+    // Print a message if no documents were found
+    if ((await cars.countDocuments(query)) === 0) {
+      console.log("No documents found!");
     }
-});
 
-const server = http.createServer(app);
-server.listen(app.get('port'), ()=>{
-    // 일체유심조 (씨크리트)
-    // 백견이불여일타 (중요)
-    console.log(`서버 실행 중>>> http://localhost:${app.get('port')}`);
-});
+    // Print returned documents
+    for await (const doc of cursor) {
+      console.dir(doc);
+    }
+
+  } finally {
+    await client.close();
+  }
+}
+
+run().catch(console.dir);
