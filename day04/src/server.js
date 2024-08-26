@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+const { MongoClient } = require("mongodb");
 
 // Replace the uri string with your MongoDB deployment's connection string.
 const uri = "mongodb://localhost:27017";
@@ -21,7 +21,7 @@ async function run() {
       // Sort returned documents in ascending order by title (A->Z)
       sort: { name: 1 },
       // Include only the `title` and `imdb` fields in each returned document
-      projection: { _id: 0, title: 1, imdb: 1 },
+      projection: { _id: 0, name: 1, company: 1 },
     };
 
     // Execute query 
