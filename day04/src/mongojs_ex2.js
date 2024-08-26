@@ -5,11 +5,8 @@ const express = require('express');
 const app = express();
 const mongojs = require("mongojs");
 const db = mongojs('vehicle', ['car']);
-const path = require("path");
 
 app.set('port', 3000);
-app.set("view engine", "ejs"); // 접미사
-app.set("views", path.join(__dirname, "../views")); // 접두사: 절대 경로 + 상대 경로
 
 app.get('/', (req, res) => {
     console.log("GET - / 요청 ...")
@@ -17,11 +14,13 @@ app.get('/', (req, res) => {
         // mongojs는 옛날 기술 - 콜백 함수로 처리.
         db.car.find((err, result) => {
             if(err) throw err;
-            // 접두사와 접미사 생략 - 파일명만 사용
-            req.app.render("CarList", {carList: result}, (err2, html)=>{
-                if(err2) throw err2;
-                res.end(html);
+            let html = '<table border="1">';
+            result.forEach((car, i)=>{
+                html += `<tr><td>${car.name}</td><td>${car.price}</td>
+                <td>${car.compnay}</td><td>${car.year}</td></tr>`;
             });
+            html += "</table>";
+            res.end(html);
         });
     } else {
         res.end("db가 연결되지 않았습니다!");
